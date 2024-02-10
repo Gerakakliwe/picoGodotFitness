@@ -1,0 +1,177 @@
+[gd_scene load_steps=26 format=3 uid="uid://d2iix0oxveqjx"]
+
+[ext_resource type="Script" path="res://addons/godot-xr-tools/xr/start_xr.gd" id="1_ghxh0"]
+[ext_resource type="PackedScene" uid="uid://b4kad2kuba1yn" path="res://addons/godot-xr-tools/hands/scenes/lowpoly/left_hand_low.tscn" id="2_aevmp"]
+[ext_resource type="PackedScene" uid="uid://l2n30mpbkdyw" path="res://addons/godot-xr-tools/hands/scenes/lowpoly/right_hand_low.tscn" id="3_j5hnc"]
+[ext_resource type="PackedScene" uid="uid://bl2nuu3qhlb5k" path="res://addons/godot-xr-tools/functions/movement_direct.tscn" id="3_mjeku"]
+[ext_resource type="PackedScene" uid="uid://c2q5phg8w08o" path="res://addons/godot-xr-tools/functions/movement_jump.tscn" id="4_k8odo"]
+[ext_resource type="PackedScene" uid="uid://b6bk2pj8vbj28" path="res://addons/godot-xr-tools/functions/movement_turn.tscn" id="5_sks8o"]
+[ext_resource type="PackedScene" uid="uid://b4ysuy43poobf" path="res://addons/godot-xr-tools/functions/function_pickup.tscn" id="6_2rlii"]
+[ext_resource type="PackedScene" uid="uid://diyu06cw06syv" path="res://addons/godot-xr-tools/player/player_body.tscn" id="6_afge4"]
+[ext_resource type="PackedScene" uid="uid://c78tjrtiyqna8" path="res://addons/godot-xr-tools/functions/movement_grapple.tscn" id="7_0na8w"]
+[ext_resource type="PackedScene" uid="uid://clt88d5d1dje4" path="res://addons/godot-xr-tools/functions/movement_crouch.tscn" id="7_4423b"]
+[ext_resource type="PackedScene" uid="uid://bxm1ply47vaan" path="res://addons/godot-xr-tools/functions/movement_climb.tscn" id="10_1vdqo"]
+[ext_resource type="PackedScene" uid="uid://cjyilbm4ucc7s" path="res://addons/godot-xr-tools/objects/climbable.tscn" id="11_27b56"]
+[ext_resource type="PackedScene" uid="uid://cmmeh4bjkkc7d" path="res://addons/kaykit_dungeon_remastered/Assets/gltf/table_long.gltf.glb" id="13_ya827"]
+[ext_resource type="PackedScene" uid="uid://bhej738mg8vkh" path="res://bottle.tscn" id="14_uobvh"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_erv8j"]
+sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+
+[sub_resource type="Sky" id="Sky_kkngd"]
+sky_material = SubResource("ProceduralSkyMaterial_erv8j")
+
+[sub_resource type="Environment" id="Environment_jgoow"]
+background_mode = 2
+sky = SubResource("Sky_kkngd")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_r6ib7"]
+albedo_color = Color(0, 0.352941, 0.247059, 1)
+
+[sub_resource type="QuadMesh" id="QuadMesh_awcxg"]
+material = SubResource("StandardMaterial3D_r6ib7")
+size = Vector2(50, 80)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_pw0pt"]
+size = Vector3(50, 1, 80)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_geswn"]
+albedo_color = Color(0.447059, 0.447059, 0.447059, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_03tkm"]
+material = SubResource("StandardMaterial3D_geswn")
+size = Vector3(2, 10, 2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_scfer"]
+size = Vector3(2, 10, 2)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_78br7"]
+top_radius = 0.2
+bottom_radius = 0.2
+height = 18.0
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_7e7ib"]
+height = 18.0
+radius = 0.2
+
+[node name="main" type="Node3D"]
+script = ExtResource("1_ghxh0")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_jgoow")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75, -0.433013, 0, 0, 0)
+shadow_enabled = true
+
+[node name="XROrigin3D" type="XROrigin3D" parent="."]
+
+[node name="XRCamera3D" type="XRCamera3D" parent="XROrigin3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.81057, 0)
+
+[node name="LeftController" type="XRController3D" parent="XROrigin3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.301074, 1.01299, 0)
+tracker = &"left_hand"
+pose = &"aim"
+
+[node name="LeftHand" parent="XROrigin3D/LeftController" instance=ExtResource("2_aevmp")]
+
+[node name="MovementDirect" parent="XROrigin3D/LeftController" instance=ExtResource("3_mjeku")]
+strafe = true
+
+[node name="MovementJump" parent="XROrigin3D/LeftController" instance=ExtResource("4_k8odo")]
+jump_button_action = "by_button"
+
+[node name="MovementCrouch" parent="XROrigin3D/LeftController" instance=ExtResource("7_4423b")]
+crouch_button_action = "ax_button"
+
+[node name="FunctionPickup" parent="XROrigin3D/LeftController" instance=ExtResource("6_2rlii")]
+
+[node name="MovementGrapple" parent="XROrigin3D/LeftController" instance=ExtResource("7_0na8w")]
+
+[node name="RightController" type="XRController3D" parent="XROrigin3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.308844, 1.00121, 0)
+tracker = &"right_hand"
+pose = &"aim"
+
+[node name="RightHand" parent="XROrigin3D/RightController" instance=ExtResource("3_j5hnc")]
+
+[node name="MovementTurn" parent="XROrigin3D/RightController" instance=ExtResource("5_sks8o")]
+
+[node name="FunctionPickup" parent="XROrigin3D/RightController" instance=ExtResource("6_2rlii")]
+
+[node name="MovementGrapple" parent="XROrigin3D/RightController" instance=ExtResource("7_0na8w")]
+
+[node name="PlayerBody" parent="XROrigin3D" instance=ExtResource("6_afge4")]
+
+[node name="MovementClimb" parent="XROrigin3D" instance=ExtResource("10_1vdqo")]
+
+[node name="Ground" type="StaticBody3D" parent="."]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Ground"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0)
+mesh = SubResource("QuadMesh_awcxg")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Ground"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+shape = SubResource("BoxShape3D_pw0pt")
+
+[node name="Pillar" parent="." instance=ExtResource("11_27b56")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 23)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Pillar"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, 0)
+mesh = SubResource("BoxMesh_03tkm")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="Pillar"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, 0)
+shape = SubResource("BoxShape3D_scfer")
+
+[node name="Pillar2" parent="." instance=ExtResource("11_27b56")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 1, 23)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Pillar2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, 0)
+mesh = SubResource("BoxMesh_03tkm")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="Pillar2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, 0)
+shape = SubResource("BoxShape3D_scfer")
+
+[node name="Pillar3" parent="." instance=ExtResource("11_27b56")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 1, 23)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Pillar3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, 0)
+mesh = SubResource("BoxMesh_03tkm")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="Pillar3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, 0)
+shape = SubResource("BoxShape3D_scfer")
+
+[node name="GrappleThing" parent="." instance=ExtResource("11_27b56")]
+transform = Transform3D(-4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0, 1, -7.10454, 8.98482, 23)
+collision_layer = 262161
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="GrappleThing"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7, 0)
+mesh = SubResource("CylinderMesh_78br7")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="GrappleThing"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7, 0)
+shape = SubResource("CylinderShape3D_7e7ib")
+
+[node name="table_long_gltf" parent="." instance=ExtResource("13_ya827")]
+transform = Transform3D(1.31134e-07, 0, 1, 0, 1, 0, -1, 0, 1.31134e-07, 0, 0, -4)
+
+[node name="Bottle" parent="." instance=ExtResource("14_uobvh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.919787, 0.697386, -3.98059)
+
+[node name="Bottle2" parent="." instance=ExtResource("14_uobvh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.165392, 0.697388, -4.11909)
+
+[node name="Bottle3" parent="." instance=ExtResource("14_uobvh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.315079, 0.697392, -3.99223)
